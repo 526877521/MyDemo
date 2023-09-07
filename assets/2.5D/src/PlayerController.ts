@@ -1,4 +1,4 @@
-import {_decorator, Component, Node, dragonBones, Vec2, EventKeyboard, systemEvent, v2, KeyCode, SystemEvent} from 'cc';
+import {_decorator, Component, Node, dragonBones, Vec2, EventKeyboard,v2, KeyCode, Input, input} from 'cc';
 import {SimpleUtil} from "db://assets/script/utils/SimpleUtil";
 
 const {ccclass, property} = _decorator;
@@ -44,14 +44,14 @@ export class PlayerController extends Component {
         ]
 
         //按键事件
-        systemEvent.on(SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
-        systemEvent.on(SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+        input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
+        input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
     }
 
     onDestroy() {
 
-        systemEvent.off(SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
-        systemEvent.off(SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+        input.off(Input.EventType.KEY_DOWN, this.onKeyDown, this);
+        input.off(Input.EventType.KEY_UP, this.onKeyUp, this);
     }
 
     private onKeyDown(e: EventKeyboard) {

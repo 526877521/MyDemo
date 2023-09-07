@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Vec3, tween, v3, easing, KeyCode, EventKeyboard, SystemEvent, systemEvent } from 'cc';
+import { _decorator, Component, Node, Vec3, tween, v3, easing, KeyCode, EventKeyboard, input, Input } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('CameraController')
@@ -9,10 +9,10 @@ export class CameraController extends Component {
     private vec3:Vec3 = v3();
     start() {
         this.offset = this.node.position.clone();
-        systemEvent.on(SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
+        input.on(Input.EventType.KEY_DOWN,this.onKeyDown,this);
     }
     onDestroy(){
-        systemEvent.off(SystemEvent.EventType.KEY_DOWN,this.onKeyDown,this);
+        input.off(Input.EventType.KEY_DOWN,this.onKeyDown,this);
     }
     private onKeyDown(e:EventKeyboard){
         if(e.keyCode == KeyCode.KEY_Q){

@@ -1,3 +1,5 @@
+import { director,Node } from "cc";
+
 export class SimpleUtil {
 
     static defaultSort(arr: Array<any>) {
@@ -167,6 +169,12 @@ export class SimpleUtil {
         console.log(arr);
         return arr;
     }
+    static getGameCameraNode(): Node {
+        return <Node><unknown>director.getScene().getChildByName("GameCamera");
+    }
 
+    static getCanvas(): Node {
+        return <Node><unknown>director.getScene().getChildByName("Canvas");
+    }
 
 }
