@@ -3,7 +3,7 @@ import { Quadtree } from "./Quadtree";
 
 
 export class QuadTreeUtil{
-    static drawAxis(graphic: Graphics, quadTree: Quadtree<>): void {
+    static drawAxis(graphic: Graphics, quadTree): void {
         graphic.lineWidth = 5 - quadTree.level;
         if(graphic.lineWidth < 2) graphic.lineWidth = 2;
         graphic.moveTo(quadTree.Bounds.MinX, quadTree.Bounds.Y);
@@ -13,7 +13,7 @@ export class QuadTreeUtil{
         graphic.stroke();
     }
 
-    static drawBorder(graphic: Graphics, quadTree: Quadtree): void {
+    static drawBorder(graphic: Graphics, quadTree): void {
         graphic.moveTo(quadTree.Bounds.MinX, quadTree.Bounds.MaxY);
         graphic.lineTo(quadTree.Bounds.MaxX, quadTree.Bounds.MaxY);
         graphic.lineTo(quadTree.Bounds.MaxX, quadTree.Bounds.MinY);

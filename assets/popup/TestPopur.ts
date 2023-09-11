@@ -19,14 +19,12 @@ export class TestPopur extends PopupBase {
     }
     protected onBeforeShow(): Promise<void> {
         return new Promise((resolve) => {
-            console.log("实例节点打开");
             resolve();
         })
     }
 
     protected onBeforeHide(suspended: boolean): Promise<void> {
         return new Promise(resolve => {
-            console.log("实例节点关闭");
             resolve(null);
         })
     }

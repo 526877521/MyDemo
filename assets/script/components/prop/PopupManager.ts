@@ -17,6 +17,18 @@ export enum CacheMode {
 }
 
 /**
+ * 弹窗展示出处
+ */
+export enum PopupFrom {
+    /** 默认 */
+    Normal = 0,
+    /** 从等待队列中获取 */
+    Quene = 1,
+    /** 挂起队列中获取 */
+    Suspended = 2
+}
+
+/**
  * 弹窗请求结果类型
  */
 enum ShowResultType {
@@ -66,7 +78,7 @@ export default class PopupManager {
     private static _queue: PopupRequestType[] = [];
 
     /**
-     * 被挂起的弹窗队列
+     * 被挂起的弹窗队列  不需要挂起模式 
      */
     public static get suspended() {
         return this._suspended;
@@ -203,10 +215,6 @@ export default class PopupManager {
                 this.recycle(path, node, params.mode);
                 this._current = null;
                 res(ShowResultType.Done);
-                // 延迟一会儿
-                // await new Promise(_res => {
-                //     new Canvas().scheduleOnce(_res, this.interval);
-                // });
                 // 下一个弹窗
                 this.next();
             }
@@ -276,14 +284,16 @@ export default class PopupManager {
         }
         // 解除锁定
         this.locked = false;
-        // 已有实例
+        // 已有实例  判定来源
         if (isValid(request.popup)) {
             // 设为当前弹窗
             this._current = request;
-            // 直接展示
-            request.node.setParent(this.container);
-            let duration = request.params.immediately ? 0 : null;
-            request.popup.show(request.options, 0);
+            if (request.from == PopupFrom.Quene) {
+                // 直接展示
+                request.node.setParent(this.container);
+                let duration = request.params.immediately ? 0 : null;
+                request.popup.show(request.options, 0);
+            }
             return;
         }
         // 加载并展示
@@ -303,7 +313,7 @@ export default class PopupManager {
             return;
         }
         // 加入队列
-        this._queue.push({ path, options, params });
+        this._queue.push({ path, options, params, from: PopupFrom.Quene });
         // 按照优先级从小到大排序
         this._queue.sort((a, b) => (a.params.priority - b.params.priority));
     }
@@ -317,11 +327,12 @@ export default class PopupManager {
         }
         const request = this._current;
         // 将当前弹窗推入挂起队列
+        request.from = PopupFrom.Suspended;
         this._suspended.push(request);
         // @ts-ignore
         await request.popup.onSuspended();
-        // 关闭当前弹窗（挂起）
-        await request.popup.hide(true);
+        // 关闭当前弹窗（挂起）todo 标识弹窗被挂起 不进行隐藏
+        // await request.popup.hide(true);
         // 置空当前
         this._current = null;
     }
@@ -459,9 +470,9 @@ export class PopupParamsType {
     priority?: number = 0;
     /** 立刻展示（将会挂起当前展示中的弹窗） */
     immediately?: boolean = false;
-
-    /**父节点 */
 }
+
+
 
 /**
  * 弹窗展示请求类型
@@ -477,4 +488,7 @@ export class PopupRequestType {
     popup?: PopupBase;
     /** 弹窗节点 */
     node?: Node;
+
+    /** 弹窗出处 */
+    from?: PopupFrom
 }
