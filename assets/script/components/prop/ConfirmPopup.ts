@@ -24,7 +24,6 @@ export default class ConfirmPopup extends PopupBase<ConfirmPopupOptions> {
 
 
     protected init(options: ConfirmPopupOptions) {
-        console.log("初始化界面信息");
         this.contentLabel.string = options.title;
         this.contentLabel.string = options.content;
         this.cancelBtn.active = !!options.isShowCancel;

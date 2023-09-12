@@ -8,23 +8,53 @@ import {
     Enum,
     v3,
     Tween,
-    view
+    view,
+    Prefab,
+    instantiate,
+    CCBoolean,
 } from 'cc';
 import { PopupAniType } from './PopupAniType';
 import { resourceBundlePath } from '../../../../@types/packages/localization-editor/@types/runtime/core/localization-global';
+import { PopupMask } from '../../UI/common/PopupMask';
+import PopupManager from './PopupManager';
 const { ccclass, property } = _decorator;
 /**
  * 弹窗基类
- *
+ *      todo
+ *          1.  添加通用的背景遮罩 
+ *          2.  添加通用的返回按钮
+ *          3.  添加通用的说明按钮
+ *          
  *
  */
+
+/**
+ * 弹窗缓存模式
+ */
+export enum PopurPanentNode {
+    /** 通用的UIContent */
+    Normal = 1,
+    /**特效层 */
+    Effect,
+    /** 确认框 */
+    Comfirm,
+    /** 提示内容 */
+    Tips
+}
+
 @ccclass
 export default class PopupBase<Options = any> extends Component {
-    @property({ type: Node, tooltip: '背景遮罩' })
-    public background: Node = null;
+    @property({ type: Prefab, tooltip: '背景遮罩' })
+    public maskNode: Prefab = null;
+
+    @property({ type: Prefab, tooltip: "通用标题" })
+    poputTitle: Prefab = null;
 
     @property({ type: Node, tooltip: '弹窗主体' })
     public content: Node = null;
+
+    @property({ type: Enum(PopurPanentNode), tooltip: "父节点" })
+    parentContent: PopurPanentNode = PopurPanentNode.Normal;
 
     @property({ type: Enum(PopupAniType), tooltip: '界面入场动画类型' })
     animType: PopupAniType = PopupAniType.no_animation;
@@ -35,12 +65,15 @@ export default class PopupBase<Options = any> extends Component {
     @property({ tooltip: '动画播放时系数' })
     timeScale: number = 1;
 
-    /**是否开启屏蔽穿透*/
-    protected openBlockInput: boolean = true;
+    @property({
+        tooltip: "是否全屏关闭按钮", visible() {
+            return !!this.maskNode;
+        }
+    })
+    isTouchClose: Boolean = false;
 
     /** 展示/隐藏动画的时长 */
     public animDuration: number = 0.3;
-
 
 
     /** 弹窗选项 */
@@ -60,6 +93,28 @@ export default class PopupBase<Options = any> extends Component {
         // 弹窗回调
         this.onAfterShow && this.onAfterShow();
     }
+
+    // 添加自定义的弹框组件
+    addCustomerComent() {
+        if (this.maskNode) {
+            let mask = instantiate(this.maskNode);
+            this.node.insertChild(mask, 0);
+            let maskCom = mask.getComponent(PopupMask);
+            if (this.isTouchClose) {
+                maskCom.setTouckCb(() => {
+                    PopupManager.hide();
+                })
+            }
+        }
+
+        if (this.poputTitle) {
+            let titleNode = instantiate(this.poputTitle);
+            this.node.addChild(titleNode);
+        }
+
+    }
+
+
 
     /**
      * 隐藏弹窗
@@ -93,21 +148,9 @@ export default class PopupBase<Options = any> extends Component {
     protected playShowAnimation(duration: number): Promise<void> {
         return new Promise<void>(async res => {
             // 初始化节点
-            const background = this.background, main = this.content;
             this.node.active = true;
             await this.showAni(true);
             res(null);
-            // background.getComponent(UIOpacity).opacity = (duration === 0 ? 150 : 0);
-            // main.getComponent(UIOpacity).opacity = (duration === 0 ? 255 : 0);
-            // main.scale = (duration === 0 ? new Vec3(1, 1, 1) : new Vec3(0.5, 0.5, 0.5));
-            // // 背景遮罩
-            // tween(main)
-            //     .to(duration, { scale: new Vec3(1, 1, 1) }, { easing: 'backOut' })
-            //     .call(res)
-            //     .start();
-            // tween(main.getComponent(UIOpacity))
-            //     .to(duration, { opacity: 255 }, { easing: 'backOut' })
-            //     .start();
         });
     }
 
@@ -117,19 +160,6 @@ export default class PopupBase<Options = any> extends Component {
      */
     protected playHideAnimation(duration: number): Promise<void> {
         return new Promise<void>(async res => {
-            // 背景遮罩
-            // tween(this.background.getComponent(UIOpacity))
-            //     .delay(duration * 0.5)
-            //     .to(duration * 0.5, { opacity: 0 })
-            //     .start();
-            // // 弹窗主体
-            // tween(this.content.getComponent(UIOpacity))
-            //     .to(duration, { opacity: 255 }, { easing: 'backOut' })
-            //     .start();
-            // tween(this.content)
-            //     .to(duration, { scale: new Vec3(0.5, 0.5, 0.5) }, { easing: 'backIn' })
-            //     .call(res)
-            //     .start();
             await this.showAni(false);
             this.node.active = false;
             res(null);
@@ -202,7 +232,6 @@ export default class PopupBase<Options = any> extends Component {
      */
     protected onBeforeShow(): Promise<void> {
         return new Promise(resolve => {
-            console.log("base节点打开");
             resolve(null);
         })
     };

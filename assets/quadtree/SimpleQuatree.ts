@@ -1,5 +1,6 @@
-import { _decorator, Color, Component, EventTouch, Graphics, input, Input, Label, Node, Rect } from 'cc';
+import { _decorator, Color, Component, EventTouch, Graphics, input, Input, Label, Node, Rect, view } from 'cc';
 import { Quadtree } from './src/Quadtree';
+import { Rectangle } from './src/Rectangle';
 const { ccclass, property } = _decorator;
 
 @ccclass('SimpleQuatree')
@@ -11,28 +12,33 @@ export class SimpleQuatree extends Component {
     @property({ type: Graphics, tooltip: "绘图系统" })
     GraphicsNode: Graphics = null;
 
-    myTree: any
+    myTree: Quadtree<Rectangle>
     myObjects = [];
-    myCursor: any;//操作的方块大小
+    myCursor: Rectangle;//操作的方块大小
 
 
     isMouseover: boolean = false;
+
+
+
+    /**
+     * 坐标系基于左下角操作
+     */
+
     start() {
         this.myTree = new Quadtree({
-            x: 0,
-            y: 0,
-            width: 600,
+            width: 800,
             height: 600,
-            maxLevels: 4,
-            maxObjects: 10
+            x: -400,
+            y: -300
         });
 
-        this.myCursor = {
-            x: 0,
-            y: 0,
+        this.myCursor = new Rectangle({
+            x: -14,
+            y: -14,
             width: 28,
             height: 28
-        };
+        });
         this.myObjects = [];
         input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
         input.on(Input.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
@@ -43,16 +49,17 @@ export class SimpleQuatree extends Component {
 
 
     onBtnClickAddSmall(event?, cuxtomData?, rect?) {
-        if (!rect) {
-            rect = {
-                x: this.randMinMax(0, this.myTree.bounds.width - 32),
-                y: this.randMinMax(0, this.myTree.bounds.height - 32),
-                width: this.randMinMax(4, 32, true),
-                height: this.randMinMax(4, 32, true),
+        let randomX = Math.random() > 0.5 ? 1 : -1;
+        let randomY = Math.random() > 0.5 ? 1 : -1;
+        rect = rect || new Rectangle({
+            x: Math.random() * (this.myTree.bounds.width - 32) * randomX,
+            y: Math.random() * (this.myTree.bounds.height - 32) * randomY,
+            width: 4 + Math.random() * 28,
+            height: 4 + Math.random() * 28,
+            data: {
                 check: false
-            };
-        }
-
+            },
+        })
         //store object in our array
         this.myObjects.push(rect);
 
@@ -61,22 +68,31 @@ export class SimpleQuatree extends Component {
 
         //update total counter
         this.updateTotal();
+
+        //视图操作
+
     }
 
     onBtnClickAddBig() {
-        this.onBtnClickAddSmall(null, null, {
-            x: this.randMinMax(0, this.myTree.bounds.width / 2),
-            y: this.randMinMax(0, this.myTree.bounds.height / 2),
+        let randomX = Math.random() > 0.5 ? 1 : -1;
+        let randomY = Math.random() > 0.5 ? 1 : -1;
+        this.onBtnClickAddSmall(null, null, new Rectangle({
+            x: this.randMinMax(0, this.myTree.bounds.width / 2) * randomX,
+            y: this.randMinMax(0, this.myTree.bounds.height / 2) * randomY,
             width: this.randMinMax(this.myTree.bounds.height / 4, this.myTree.bounds.height / 2, true),
             height: this.randMinMax(this.myTree.bounds.height / 4, this.myTree.bounds.height / 2, true),
-            check: false
-        });
+            data: {
+                check: false,
+            },
+        }));
+        this.drawQuadtree(this.myTree);
     }
 
     onBtnClickAddTenSmall() {
         for (let i = 0; i < 10; i++) {
             this.onBtnClickAddSmall()
         };
+        this.drawQuadtree(this.myTree);
     }
 
     onBtnClickClean() {
@@ -87,12 +103,7 @@ export class SimpleQuatree extends Component {
         //update total counter
         this.updateTotal();
     }
-    onTouchMove(event: EventTouch) {
-        this.isMouseover = true;
-    }
-    onTouchCancel(event: EventTouch) {
-        this.isMouseover = false;
-    }
+
     updateTotal() {
         this.totalNum.string = `${this.myObjects.length}`;
     }
@@ -103,49 +114,60 @@ export class SimpleQuatree extends Component {
 
         return val;
     }
-    update(deltaTime: number) {
-        if (this.isMouseover) {
-            // ctx.fillStyle = 'rgba(255,255,255,0.5)';
-            // ctx.fillRect(myCursor.x, myCursor.y, myCursor.width, myCursor.height);
 
-            //retrieve all objects in the bounds of the hero 
-            let candidates = this.myTree.retrieve(this.myCursor);
-
-            //flag retrieved objects
-            for (let i = 0; i < candidates.length; i = i + 1) {
-                candidates[i].check = true;
-            }
-        }
-        // this.drawQuadtree(this.myTree);
-    }
     drawQuadtree(node) {
-        var bounds = node.bounds;
-
+        let bounds = node.bounds;
         //no subnodes? draw the current node
         if (node.nodes.length === 0) {
-            this.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
-            //has subnodes? drawQuadtree them!
+            this.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height, node.level);
         } else {
             for (let i = 0; i < node.nodes.length; i = i + 1) {
                 this.drawQuadtree(node.nodes[i]);
             }
         }
     }
-    strokeRect(x, y, w, h, color?: Color) {
+
+    // 400 0 400 300 
+    strokeRect(x, y, w, h, level) {
         const ctx = this.GraphicsNode.getComponent(Graphics);
-        ctx.lineWidth = 1;
-        ctx.strokeColor = color ? color : Color.GREEN;
-        // g.rect(x, y, w, h);
+        ctx.lineWidth = level + 2;
+        ctx.strokeColor = Color.RED;
 
         //坐标系转换
-        ctx.moveTo(-w / 2, -h / 2);
-        ctx.lineTo(w / 2, -h / 2);
-        ctx.lineTo(w / 2, h / 2);
-        ctx.lineTo(-w / 2, h / 2);
-        ctx.close();
+        // ctx.moveTo(-w / 2, -h / 2);
+        // ctx.lineTo(w / 2, -h / 2);
+        // ctx.lineTo(w / 2, h / 2);
+        // ctx.lineTo(-w / 2, h / 2);
+        // ctx.close();
+        // ctx.stroke();
+        // ctx.fill();
 
+        ctx.rect(x, y, w, h);
         ctx.stroke();
-        ctx.fill();
+    }
+
+
+    onTouchMove(event: EventTouch) {
+        this.isMouseover = true;
+        // Position cursor at mouse position
+        // this.myCursor.x = e.offsetX - (myCursor.width/2);
+        // this.myCursor.y = e.offsetY - (myCursor.height/2);
+
+        // Reset myObjects check flag
+        this.myObjects.forEach(obj => obj.data.check = false);
+
+        // Retrieve all objects that share nodes with the cursor
+        const candidates = this.myTree.retrieve(this.myCursor);
+
+        // Flag retrieved objects
+        //@ts-ignore
+        candidates.forEach(obj => obj.data.check = true);
+
+        // Draw scene
+    }
+    onTouchCancel(event: EventTouch) {
+        this.isMouseover = false;
+        this.myObjects.forEach(obj => obj.data.check = false);
     }
 }
 

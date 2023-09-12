@@ -1,5 +1,6 @@
 import { Graphics } from "cc";
 import { Quadtree } from "./Quadtree";
+import { Rectangle } from "electron/main";
 
 
 export class QuadTreeUtil{
