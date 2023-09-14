@@ -221,7 +221,7 @@ export class Rectangle<CustomDataType = void> implements RectangleGeometry, Inde
     /**
      * Determine which quadrant this rectangle belongs to.
      * @param node - Quadtree node to be checked
-     *  当前元素在第几象限内
+     *  当前元素在第几象限内   this --待检测矩形  node -- 当前区域
      * @returns Array containing indexes of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right)
      */
     qtIndex(node: NodeGeometry): number[] {
@@ -230,28 +230,28 @@ export class Rectangle<CustomDataType = void> implements RectangleGeometry, Inde
             boundsCenterX = node.x + (node.width / 2),
             boundsCenterY = node.y + (node.height / 2);
 
-        const startIsNorth = this.y < boundsCenterY,
+        const startIsSouth = this.y < boundsCenterY,
             startIsWest = this.x < boundsCenterX,
             endIsEast = this.x + this.width > boundsCenterX,
-            endIsSouth = this.y + this.height > boundsCenterY;
+            endIsNorth = this.y + this.height > boundsCenterY;
 
         //top-right quad
-        if (startIsNorth && endIsEast) {
+        if (endIsNorth && endIsEast) {
             indexes.push(0);
         }
 
         //top-left quad
-        if (startIsWest && startIsNorth) {
+        if (startIsWest && endIsNorth) {
             indexes.push(1);
         }
 
         //bottom-left quad
-        if (startIsWest && endIsSouth) {
+        if (startIsWest && startIsSouth) {
             indexes.push(2);
         }
 
         //bottom-right quad
-        if (endIsEast && endIsSouth) {
+        if (endIsEast && startIsSouth) {
             indexes.push(3);
         }
 

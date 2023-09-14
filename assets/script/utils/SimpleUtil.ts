@@ -1,4 +1,4 @@
-import { director,Node } from "cc";
+import { director, Node } from "cc";
 
 export class SimpleUtil {
 
@@ -147,7 +147,7 @@ export class SimpleUtil {
     static newShellSort(arr) {
         // arr = [7, 3, 5, 9, 1, 6, 2, 8, 4]
         console.time('新希尔排序耗时:');
-        let len = arr.length,gap=1;
+        let len = arr.length, gap = 1;
         // 定义增量序列
         while (gap < len / 3) {
             gap = gap * 3 + 1;
@@ -170,7 +170,7 @@ export class SimpleUtil {
         return arr;
     }
     static getGameCameraNode(): Node {
-        return <Node><unknown>director.getScene().getChildByName("GameCamera");
+        return this.getCanvas().getChildByName("GameCamera");
     }
 
     static getCanvas(): Node {

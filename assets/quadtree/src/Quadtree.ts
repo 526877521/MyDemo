@@ -171,10 +171,10 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
             y = this.bounds.y;
 
         const coords = [
-            { x: x + width, y: y },
-            { x: x, y: y },
-            { x: x, y: y + height },
             { x: x + width, y: y + height },
+            { x: x, y: y + height },
+            { x: x, y: y },
+            { x: x + width, y: y },
         ];
 
         for (let i = 0; i < 4; i++) {
