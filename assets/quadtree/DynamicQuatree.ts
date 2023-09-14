@@ -5,8 +5,8 @@ import { po } from 'gettext-parser';
 import { SimpleUtil } from '../script/utils/SimpleUtil';
 const { ccclass, property } = _decorator;
 
-@ccclass('SimpleQuatree')
-export class SimpleQuatree extends Component {
+@ccclass('DynamicQuatree')
+export class DynamicQuatree extends Component {
 
     @property({ type: Label, tooltip: "总数量" })
     totalNum: Label = null;
@@ -35,7 +35,7 @@ export class SimpleQuatree extends Component {
      * 坐标系基于左上角
      */
 
-    start() {
+    onLoad() {
 
         this.childContent.parent.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
         this.childContent.parent.on(Node.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
@@ -53,39 +53,78 @@ export class SimpleQuatree extends Component {
             width: 28,
             height: 28
         });
-
         this.myCursorNode = this.createPrefab(this.myCursor);
 
         this.myObjects = [];
-
         this.drawQuadtree(this.myTree);
+        setInterval(() => {
+            this.loop()
+        }, 16)
+    }
+    start(): void {
+        for (let i = 0; i < 50; i++) {
+            const rectangle = new Rectangle({
+                x: Math.random() * 800,
+                y: Math.random() * 600,
+                width: 4 + Math.random() * 28,
+                height: 4 + Math.random() * 28,
 
+                // Custom data: velocity for x and y, 
+                // and a check boolean to flag retrieved objects
+                data: {
+                    id: this.tIndex,
+                    vx: -0.5 + Math.random(),
+                    vy: -0.5 + Math.random(),
+                    check: false,
+                },
+            });
+            this.onBtnClickAddSmall(rectangle);
+
+            this.myObjects.push(rectangle);
+        }
+    }
+
+    loop() {
+        this.myTree.clear();
+        this.clearGraphics();
+        this.myObjects.forEach(value => {
+            let node: Node = value.data.node;
+            let oldPos = node.getPosition();
+            let posX = oldPos.x + value.data.vx;
+            let posY = oldPos.y + value.data.vy;
+            if (posX < 0) value.data.vx = Math.random();
+            else if (posX > 800) value.data.vx = -Math.random();
+
+            if (posY < 0) value.data.vy = Math.random();
+            else if (posY > 600) value.data.vy = -Math.random();
+            value.x = posX;
+            value.y = posY;
+            node.setPosition(posX, posY, 0)
+            node.getComponent(Sprite).color = Color.WHITE;
+            this.myTree.insert(value);
+        })
+        const candidates = this.myTree.retrieve(this.myCursor);
+        // // Flag retrieved objects
+        // //@ts-ignore
+        candidates.forEach(obj => {
+            let node = (obj.data as any).node;
+            node.getComponent(Sprite).color = Color.GREEN;
+        });
+        this.drawQuadtree(this.myTree);
     }
 
 
-    onBtnClickAddSmall(event?, cuxtomData?, rect?) {
+    onBtnClickAddSmall(rect?) {
         this.tIndex++;
-        let randomX = Math.random() > 0.5 ? 1 : -1;
-        let randomY = Math.random() > 0.5 ? 1 : -1;
-        //视图操作
-
         rect = rect || new Rectangle({
             x: Math.random() * (this.myTree.bounds.width - 32),
             y: Math.random() * (this.myTree.bounds.height - 32),
             width: 4 + Math.random() * 28,
             height: 4 + Math.random() * 28,
             data: {
-                id: this.tIndex,
                 check: false
             },
         })
-        //store object in our array
-        this.myObjects.push(rect);
-
-        //insert object in our quadtree
-        this.myTree.insert(rect);
-
-        //update total counter
         this.updateTotal();
         let prefabNode = this.createPrefab(rect);
         rect.data.node = prefabNode;
@@ -105,40 +144,6 @@ export class SimpleQuatree extends Component {
         return nodeItem;
     }
 
-
-    onBtnClickAddBig() {
-        this.onBtnClickAddSmall(null, null, new Rectangle({
-            x: this.randMinMax(0, this.myTree.bounds.width / 2),
-            y: this.randMinMax(0, this.myTree.bounds.height / 2),
-            width: this.randMinMax(this.myTree.bounds.height / 4, this.myTree.bounds.height / 2, true),
-            height: this.randMinMax(this.myTree.bounds.height / 4, this.myTree.bounds.height / 2, true),
-            data: {
-                check: false,
-                node: null
-            },
-        }));
-
-    }
-
-    onBtnClickAddTenSmall() {
-        for (let i = 0; i < 10; i++) {
-            this.onBtnClickAddSmall()
-        };
-        this.drawQuadtree(this.myTree);
-    }
-
-    onBtnClickClean() {
-        this.myObjects = [];
-
-        //empty our quadtree
-        this.myTree.clear();
-        //update total counter
-        this.updateTotal();
-        this.childContent.removeAllChildren();
-        this.clearGraphics();
-        this.drawQuadtree(this.myTree);
-    }
-
     updateTotal() {
         this.totalNum.string = `${this.myObjects.length}`;
     }
@@ -149,7 +154,6 @@ export class SimpleQuatree extends Component {
     }
 
     onTouchMove(event: EventTouch) {
-        this.isMouseover = true;
         // Position cursor at mouse position
         let UICamera: Camera = SimpleUtil.getGameCameraNode().getComponent(Camera)
         let point = event.getLocation();
@@ -160,39 +164,11 @@ export class SimpleQuatree extends Component {
         this.myCursorNode.setPosition(new Vec3(posX, posY, 0));
         this.myCursor.x = posX;
         this.myCursor.y = posY;
-        // Reset myObjects check flag
-        // this.childContent.children.forEach(value => {
-        //     value.getComponent(Sprite).color = Color.WHITE;
-        // })
-        this.myObjects.forEach(obj => {
-            let node = obj.data.node;
-            node.getComponent(Sprite).color = Color.WHITE;
-        });
-
-        // this.myObjects.forEach(obj => obj.data.check = false);
-
-        // // Retrieve all objects that share nodes with the cursor
-        const candidates = this.myTree.retrieve(this.myCursor);
-        // // Flag retrieved objects
-        // //@ts-ignore
-        candidates.forEach(obj => {
-
-            let node = (obj.data as any).node;
-            node.getComponent(Sprite).color = Color.GREEN;
-        });
-
-        // Draw scene
     }
     onTouchCancel(event: EventTouch) {
-        this.isMouseover = false;
-        this.myObjects.forEach(obj => {
-            let node = obj.data.node;
-            node.getComponent(Sprite).color = Color.WHITE;
-        });
     }
 
     drawQuadtree(node) {
-
         let bounds = node.bounds;
         //no subnodes? draw the current node
         if (node.nodes.length === 0) {
@@ -203,12 +179,10 @@ export class SimpleQuatree extends Component {
             }
         }
     }
-
-    //
     strokeRect(x, y, w, h, level) {
         const ctx = this.GraphicsNode.getComponent(Graphics);
         ctx.lineWidth = level + 2;
-        ctx.strokeColor = level < 2 ? Color.RED : Color.GREEN;
+        ctx.strokeColor = level < 2 ? Color.RED : Color.BLUE;
         ctx.rect(x, y, w, h);//基于左下角
         ctx.stroke();
     }
