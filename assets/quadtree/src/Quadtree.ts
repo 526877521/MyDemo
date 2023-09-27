@@ -206,7 +206,6 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
      * @param obj - Object to be added.
      */
     insert(obj: ObjectsType): void {
-
         //if we have subnodes, call insert on matching subnodes
         if (this.nodes.length) {
             const indexes = this.getIndex(obj);
@@ -216,7 +215,6 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
             }
             return;
         }
-
         //otherwise, store object here
         this.objects.push(obj);
 
