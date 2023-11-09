@@ -1,4 +1,4 @@
-import { director, Node } from "cc";
+import { Button, director, EventTouch, isValid, Node } from "cc";
 
 export class SimpleUtil {
 
@@ -175,6 +175,28 @@ export class SimpleUtil {
 
     static getCanvas(): Node {
         return <Node><unknown>director.getScene().getChildByName("Canvas");
+    }
+
+    static addButtonClick(buttonNode: Node, callback: Function = null, target: any = null) {
+
+        if (!buttonNode || !isValid(buttonNode)) {
+            return;
+        }
+
+        if (callback == null) {
+            callback = function () { }
+        }
+        buttonNode.on(Node.EventType.TOUCH_END, callback, target);
+    }
+    //移除button点击事件
+    static removeButtonClick(buttonNode: Node, callback: Function = null, target: any = null) {
+        if (!buttonNode || !isValid(buttonNode)) {
+            return;
+        }
+        if (callback == null) {
+            callback = function () { }
+        }
+        buttonNode.off(Node.EventType.TOUCH_END, callback, target);
     }
 
 }

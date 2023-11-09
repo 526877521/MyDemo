@@ -2,11 +2,11 @@ import { _decorator, Component, MathBase, Node } from 'cc';
 import PopupManager, { CacheMode, PopupParamsType } from '../script/components/prop/PopupManager';
 import { ConfirmPopupOptions } from '../script/components/prop/ConfirmPopup';
 const { ccclass, property } = _decorator;
-
+import async from 'async';
 @ccclass('GameControl')
 export class GameControl extends Component {
     start() {
-
+        console.log("async", async);
     }
 
     update(deltaTime: number) {

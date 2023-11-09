@@ -1,42 +1,64 @@
-import { GuideUtil } from "./GuideUtil";
-
-/**  新手引导触发机制 :上一个任务完成 、主动触发（达到某一个条件）
- *   节点内容：手指、提示文本、自定义弹出框
- * 解析task    
- *      desc:描述文件
- *      command:{
- *          cmd:类型 //手指 提示文本 弹出框
- *          args:节点路径或者弹出框路径
- *          delayTime:延迟时间
- *          //考虑是否会发送请求或者异步操作
-            onStart(callback) {
-                setTimeout(() => {
-                    cc.log('模拟异步获取数据');
-                    callback();
-                }, 1000);
-            },
-
-            onEnd(callback) {
-                setTimeout(() => {
-                    cc.log('模拟异步提交数据');
-                    callback();
-                }, 1000);
-            },
- *      }
- * 
- */
+import { Node, log } from "cc";
+import async from "async";
+import GuideView from "./GuideView";
 export class GuideCommand {
-    static locator(step, callback) {
+    //定位节点
+    static locator(godGuide: GuideView, step, callback) {
         let { args } = step.command;
-        let node = GuideUtil.seekNodeByName(Node, args);
-        //遮罩层处理
-        
-        //设置targetNode 
+        godGuide.find(args, (node) => {
+            godGuide._targetNode = node as Node;
 
-        //绑定点击事件
+            //点击确认
+            node.once(Node.EventType.TOUCH_END, () => {
+                log('节点被点击');
+                //任务完成
+                callback();
+            });
+        });
+    }
 
-        //设置触摸模拟
-        // inputManager
+    //定位节点，显示一个手指动画
+    static finger(godGuide:GuideView, step, callback) {
+        let { args } = step.command;
+        godGuide._targetNode = null;
+        //定位节点
+        godGuide.find(args, (node) => {
+            //手指动画
+            godGuide.fingerToNode(node, () => {
+                godGuide._targetNode = node;
+                //点击确认
+                node.once(Node.EventType.TOUCH_END, () => {
+                    log('手指定位的节点被点击');
+                    //任务完成
+                    callback();
+                });
+            });
+        });
+    }
 
+    //文本指令
+    static text(godGuide, step, callback) {
+        let { args } = step.command;
+        if (args && (typeof args === 'string' || typeof args === 'number')) {
+            args = [args];
+        }
+        let index = 0;
+        //顺序显示文本
+        async.eachSeries(args, (str, cb) => {
+            let flag = false;
+            godGuide.showText(str, () => {
+                if (flag) {
+                    return;
+                }
+                flag = true;
+                cb();
+            });
+
+            if (index++ >= args.length - 1) {
+                flag = true;
+                cb();
+                return;
+            }
+        }, callback);
     }
 }

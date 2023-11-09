@@ -1,6 +1,6 @@
 
 
-import { Canvas, Prefab, instantiate, isValid, resources, warn, Node } from "cc";
+import { Canvas, Prefab, instantiate, isValid, resources, warn, Node, macro } from "cc";
 import PopupBase from "./PopupBase";
 import { SimpleUtil } from "../../utils/SimpleUtil";
 
@@ -202,7 +202,7 @@ export default class PopupManager {
             // 添加到场景中
             node.setParent(this.container);
             // 显示在最上层
-            // node.setSiblingIndex(cc.macro.MAX_ZINDEX);
+            // node.setSiblingIndex(macro.MAX_LABEL_CANVAS_POOL_SIZE);
             // 设置完成回调
             // @ts-ignore
             popup.finishCallback = async (suspended: boolean) => {
@@ -218,7 +218,7 @@ export default class PopupManager {
                 // 下一个弹窗
                 this.next();
             }
-            popup.show(options, (params.immediately ? 0 : undefined));
+            popup.show(options);
         });
     }
 
@@ -291,8 +291,7 @@ export default class PopupManager {
             if (request.from == PopupFrom.Quene) {
                 // 直接展示
                 request.node.setParent(this.container);
-                let duration = request.params.immediately ? 0 : null;
-                request.popup.show(request.options, 0);
+                request.popup.show(request.options);
             }
             return;
         }

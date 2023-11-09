@@ -1,0 +1,146 @@
+
+skeleton.png
+size: 1855,100
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+矩形1_00000
+  rotate: false
+  xy: 2, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00001
+  rotate: false
+  xy: 95, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00002
+  rotate: false
+  xy: 188, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00003
+  rotate: false
+  xy: 281, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00004
+  rotate: false
+  xy: 374, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00005
+  rotate: false
+  xy: 467, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00006
+  rotate: false
+  xy: 560, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00007
+  rotate: false
+  xy: 1211, 4
+  size: 90, 94
+  orig: 95, 100
+  offset: 2, 3
+  index: -1
+矩形1_00008
+  rotate: false
+  xy: 1303, 4
+  size: 90, 94
+  orig: 95, 100
+  offset: 2, 3
+  index: -1
+矩形1_00009
+  rotate: false
+  xy: 1395, 4
+  size: 90, 94
+  orig: 95, 100
+  offset: 2, 3
+  index: -1
+矩形1_00010
+  rotate: false
+  xy: 1487, 4
+  size: 90, 94
+  orig: 95, 100
+  offset: 2, 3
+  index: -1
+矩形1_00011
+  rotate: false
+  xy: 1579, 4
+  size: 90, 94
+  orig: 95, 100
+  offset: 2, 3
+  index: -1
+矩形1_00012
+  rotate: false
+  xy: 1671, 4
+  size: 90, 94
+  orig: 95, 100
+  offset: 2, 3
+  index: -1
+矩形1_00013
+  rotate: false
+  xy: 1763, 4
+  size: 90, 94
+  orig: 95, 100
+  offset: 2, 3
+  index: -1
+矩形1_00014
+  rotate: false
+  xy: 653, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00015
+  rotate: false
+  xy: 746, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00016
+  rotate: false
+  xy: 839, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00017
+  rotate: false
+  xy: 932, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00018
+  rotate: false
+  xy: 1025, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1
+矩形1_00019
+  rotate: false
+  xy: 1118, 2
+  size: 91, 96
+  orig: 95, 100
+  offset: 2, 2
+  index: -1

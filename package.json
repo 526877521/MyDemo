@@ -5,5 +5,8 @@
   "creator": {
     "version": "3.6.3"
   },
-  "description": "MyDemo"
+  "description": "MyDemo",
+  "dependencies": {
+    "async": "^3.2.5"
+  }
 }

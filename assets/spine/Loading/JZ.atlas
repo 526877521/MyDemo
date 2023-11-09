@@ -1,0 +1,194 @@
+
+JZ.png
+size: 946,962
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+加载/加载_00000
+  rotate: false
+  xy: 2, 770
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00001
+  rotate: false
+  xy: 2, 578
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00002
+  rotate: false
+  xy: 214, 770
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00003
+  rotate: false
+  xy: 2, 386
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00004
+  rotate: false
+  xy: 214, 578
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00005
+  rotate: false
+  xy: 426, 770
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00006
+  rotate: false
+  xy: 2, 194
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00007
+  rotate: false
+  xy: 214, 386
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00008
+  rotate: false
+  xy: 426, 578
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00009
+  rotate: false
+  xy: 638, 770
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00010
+  rotate: false
+  xy: 2, 2
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00011
+  rotate: false
+  xy: 214, 194
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00012
+  rotate: false
+  xy: 426, 386
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00013
+  rotate: false
+  xy: 638, 578
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00014
+  rotate: false
+  xy: 214, 2
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00015
+  rotate: false
+  xy: 426, 194
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00016
+  rotate: false
+  xy: 638, 386
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00017
+  rotate: false
+  xy: 426, 2
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00018
+  rotate: false
+  xy: 638, 194
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00019
+  rotate: false
+  xy: 638, 2
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载中
+  rotate: false
+  xy: 850, 937
+  size: 94, 23
+  orig: 94, 23
+  offset: 0, 0
+  index: -1
+
+JZ2.png
+size: 962,214
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+加载/加载_00020
+  rotate: true
+  xy: 2, 2
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00021
+  rotate: true
+  xy: 194, 2
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00022
+  rotate: true
+  xy: 386, 2
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00023
+  rotate: true
+  xy: 578, 2
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1
+加载/加载_00024
+  rotate: true
+  xy: 770, 2
+  size: 210, 190
+  orig: 210, 190
+  offset: 0, 0
+  index: -1

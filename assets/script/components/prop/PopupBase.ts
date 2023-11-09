@@ -39,7 +39,9 @@ export enum PopurPanentNode {
     /** 确认框 */
     Comfirm,
     /** 提示内容 */
-    Tips
+    Tips,
+    /**引导层 */
+    Guide
 }
 
 @ccclass
@@ -79,17 +81,14 @@ export default class PopupBase<Options = any> extends Component {
     /** 弹窗选项 */
     protected options: Options = null;
 
-    public async show(options?: Options, duration?: number) {
+    public async show(options?: Options) {
         this.options = options;
         this.init(this.options);
         // 更新样式
         this.updateDisplay(this.options);
         this.onBeforeShow && await this.onBeforeShow();
         // 展示动画
-        if (duration == undefined) {
-            duration = (duration < 0 ? 0 : this.animDuration);
-        }
-        await this.playShowAnimation(duration);
+        await this.playShowAnimation();
         // 弹窗回调
         this.onAfterShow && this.onAfterShow();
     }
@@ -126,11 +125,8 @@ export default class PopupBase<Options = any> extends Component {
         const node = this.node;
         // 动画时长不为 0 时拦截点击事件（避免误操作）
         this.onBeforeHide && await this.onBeforeHide(suspended);
-        // 展示动画
-        if (duration == undefined) {
-            duration = duration < 0 ? 0 : this.animDuration;
-        }
-        await this.playHideAnimation(duration);
+
+        await this.playHideAnimation();
         // 关闭节点
         node.active = false;
         // 弹窗回调
@@ -145,7 +141,7 @@ export default class PopupBase<Options = any> extends Component {
      *          
      * @param duration 动画时长
      */
-    protected playShowAnimation(duration: number): Promise<void> {
+    protected playShowAnimation(): Promise<void> {
         return new Promise<void>(async res => {
             // 初始化节点
             this.node.active = true;
@@ -158,7 +154,7 @@ export default class PopupBase<Options = any> extends Component {
      * 播放弹窗隐藏动画（派生类请重写此函数以实现自定义逻辑）
      * @param duration 动画时长
      */
-    protected playHideAnimation(duration: number): Promise<void> {
+    protected playHideAnimation(): Promise<void> {
         return new Promise<void>(async res => {
             await this.showAni(false);
             this.node.active = false;
