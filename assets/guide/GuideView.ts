@@ -145,8 +145,9 @@ export default class GuideView extends Component {
                 if (step.onStart) {
                     step.onStart(() => { cb() });
                 } else {
-                    cb();
+                    cb(null, 1);
                 }
+
             },
 
             //任务指令
@@ -154,7 +155,7 @@ export default class GuideView extends Component {
                 this._maskCom.node.active = true;
                 this.scheduleOnce(() => {
                     this._processStepCommand(step, () => {
-                        cb();
+                        cb(null, 2);
                     });
                 }, step.delayTime || 0);
             },
@@ -168,11 +169,11 @@ export default class GuideView extends Component {
                 if (step.onEnd) {
                     step.onEnd(() => { cb() });
                 } else {
-                    cb();
+                    cb(null, 3);
                 }
             },
-        }, (error) => {
-            log(`步骤【${step.desc}】结束！`);
+        }, (error, res) => {
+            log(`步骤【${step.desc}】结束！`, res);
             callback();
         })
     }
