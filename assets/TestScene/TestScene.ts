@@ -1,6 +1,8 @@
 import {_decorator, Component, Node, Prefab, instantiate, macro, dynamicAtlasManager} from 'cc';
 import {Item} from "db://assets/TestScene/src/Item";
 import {SimpleUtil} from "db://assets/script/utils/SimpleUtil";
+import SceneMgr, { SceneName } from '../script/scene/SceneMgr';
+
 
 const {ccclass, property} = _decorator;
 
@@ -22,6 +24,11 @@ export class TestScene extends Component {
 
 
     }
+    onBtnClickDirect(){
+        SceneMgr.instance.loadScene(SceneName.Game)
+    }
+
+
 
     update(deltaTime: number) {
 

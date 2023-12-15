@@ -1,0 +1,94 @@
+{
+  "package_version": 2,
+  "name": "resource-checker",
+  "version": "1.0.1",
+  "type": "module",
+  "description": "i18n:resource-checker.description",
+  "main": "./dist/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "fs-extra": "^10.0.0",
+    "heapsnapshot-parser": "^0.1.0",
+    "image-size": "^1.0.2",
+    "vue": "^3.3.4",
+    "vue3-virtual-list": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.5",
+    "@types/node": "^20.4.6",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "sass": "^1.66.1",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vue-tsc": "^1.8.5"
+  },
+  "panels": {
+    "default": {
+      "title": "Image Checker",
+      "type": "dockable",
+      "main": "dist/panels/default",
+      "size": {
+        "min-width": 300,
+        "min-height": 300,
+        "width": 300,
+        "height": 600
+      }
+    },
+    "heap": {
+      "title": "Heap Checker",
+      "type": "dockable",
+      "main": "dist/panels/heap",
+      "size": {
+        "min-width": 300,
+        "min-height": 300,
+        "width": 300,
+        "height": 600
+      }
+    }
+  },
+  "contributions": {
+    "menu": [
+      {
+        "path": "Tools/ResourceChecker",
+        "label": "ImageChecker",
+        "message": "open-panel"
+      },
+      {
+        "path": "Tools/ResourceChecker",
+        "label": "HeapChecker",
+        "message": "open-heap-panel"
+      }
+    ],
+    "inspector": {
+      "section": {
+        "node": {
+          "TestComp": "./dist/inspector/test-comp.js"
+        }
+      }
+    },
+    "messages": {
+      "open-panel": {
+        "methods": [
+          "openPanel"
+        ]
+      },
+      "open-heap-panel": {
+        "methods": [
+          "openHeapPanel"
+        ]
+      },
+      "send-to-panel": {
+        "methods": [
+          "default.hello"
+        ]
+      }
+    }
+  },
+  "author": "Cocos Creator",
+  "editor": ">=3.4.0",
+  "_storeId": "ea283709ba85bf923609e61872c33873"
+}

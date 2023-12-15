@@ -21,7 +21,6 @@ export default class CustomButtonExtension extends Button {
 
     onLoad() {
         super.onLoad(); // 调用原始按钮组件的 onLoad 方法
-
         // 添加点击事件监听
         this.node.on('click', this.onButtonClick, this);
     }

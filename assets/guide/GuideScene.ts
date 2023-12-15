@@ -1,10 +1,9 @@
-import { _decorator, Component, EventTarget, EventTouch, instantiate, Node, Prefab, Vec2, Vec3 } from 'cc';
-import PopupManager, { CacheMode } from '../script/components/prop/PopupManager';
-import { SimpleQuatree } from '../quadtree/SimpleQuatree';
+import { _decorator, Component, EventTarget, EventTouch, instantiate, Node, Prefab, resources, SpriteFrame, Vec2, Vec3 } from 'cc';
+
 import { SimpleUtil } from '../script/utils/SimpleUtil';
 import { Locator } from './Locator';
-import { protocol } from 'electron';
 import GuideMgr from './GuideMgr';
+
 const { ccclass, property } = _decorator;
 
 @ccclass('GuideScene')
@@ -18,10 +17,10 @@ export class GuideScene extends Component {
         SimpleUtil.addButtonClick(Locator.seekNodeByName(this.node, "btn_test2"), this.onBtnTouched, this);
         SimpleUtil.addButtonClick(Locator.seekNodeByName(this.node, "btn_test3"), this.onBtnTouched, this);
     }
-    start() {
-        this.scheduleOnce(()=>{
-            GuideMgr.getInstance().openGuide(2);
-        },1)
+    async start() {
+        this.scheduleOnce(() => {
+            // GuideMgr.getInstance().openGuide(2);
+        }, 1)
     }
     onBtnTouched(event: EventTouch) {
         let name = event.target.name;

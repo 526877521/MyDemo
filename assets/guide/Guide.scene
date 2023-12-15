@@ -328,7 +328,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 489.30062630480165,
+    "_orthoHeight": 375,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -688,7 +688,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 749.9999999999999,
+      "x": 750.0000000000001,
       "y": 375,
       "z": 0
     },
@@ -770,7 +770,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 489.30062630480165,
+    "_orthoHeight": 375,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -1473,10 +1473,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "guideView": {
-      "__uuid__": "320ae40b-1d6c-414f-bc58-2c35a002d113",
-      "__expectedType__": "cc.Prefab"
-    },
+    "guideView": null,
     "_id": "04Tkp15L1NUKNfhaGDtUah"
   },
   {
