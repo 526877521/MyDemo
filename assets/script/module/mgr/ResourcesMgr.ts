@@ -25,8 +25,6 @@ export class ResourcesMgr extends BaseMgr<ResourcesMgr> {
         })
     }
     //加载单个资源
-    // loadFile(path: string);
-    // loadFile(path: string, type?: (typeof Asset));
     loadFile(path: string, type?: (typeof Asset), complete?) {
         return new Promise((resolve) => {
             resources.load(path, type, (error, data) => {

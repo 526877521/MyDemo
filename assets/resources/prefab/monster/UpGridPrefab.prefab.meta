@@ -2,12 +2,12 @@
   "ver": "1.1.40",
   "importer": "prefab",
   "imported": true,
-  "uuid": "8970eb9e-d358-40ef-9941-75a886e6ecba",
+  "uuid": "055a691c-8089-4437-a978-b5d92285ca51",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "NormalPrefab1"
+    "syncNodeName": "UpGridPrefab"
   }
 }

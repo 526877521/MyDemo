@@ -397,7 +397,7 @@
     "__prefab": {
       "__id__": 19
     },
-    "type": "prefab/Normal",
+    "_type": 0,
     "num": 1,
     "_id": ""
   },

@@ -1,9 +1,10 @@
 import { Enum } from "cc";
 
 export const POOL_ENMU = {
-    Monster_Normal: "prefab/Normal",
-    Monster_Stone: "prefab/Stone",
-    Monster_Empty: "prefab/Empty",
+    Monster_Normal: "prefab/monster/NormalPrefab",
+    Monster_Stone: "prefab/monster/StorePrefab",
+    Monster_Empty: "prefab/monster/EmptyPrefab",
+    Monster_UpGrid: "prefab/monster/UpGridPrefab",
 }
 
 //cocos 不支持枚举为value的值  进行枚举转换

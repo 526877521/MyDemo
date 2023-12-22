@@ -4,6 +4,7 @@ import { ResConfig } from '../../data';
 import { ResourcesMgr } from '../module/mgr/ResourcesMgr';
 import { PoolUnit } from '../module/pool/PoolUnit';
 import { NodePoolMgr } from '../module/pool/NodePoolMgr';
+import { Global } from '../Global';
 
 const { ccclass, property } = _decorator;
 
@@ -69,7 +70,6 @@ export class LoadingScene extends Component {
                 return
             }
             let registerNum = poolUnit.num;
-            let poolName = poolUnit.getPoolName();
             for (let i = 0; i < registerNum; i++)  NodePoolMgr.instance.putNodeToPool(prefabNode);
         }
     }

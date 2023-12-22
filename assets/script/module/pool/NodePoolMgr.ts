@@ -1,4 +1,4 @@
-import { NodePool, Node, Enum, isValid, warn } from "cc";
+import { NodePool, Node, Enum, isValid, warn, instantiate } from "cc";
 import BaseMgr from "../mgr/BaseMgr";
 import { ResourcesMgr } from "../mgr/ResourcesMgr";
 import { PoolUnit } from "./PoolUnit";
@@ -37,12 +37,11 @@ export class NodePoolMgr extends BaseMgr<NodePoolMgr> {
         let node;
         let nodePool = this._poolMap.get(poolName);
         if (!nodePool || nodePool.size() == 0) {
-            let nodePrefabPath = Pool_Type[poolName];
-            if (!nodePrefabPath) return null;
-            node = await ResourcesMgr.instance.loadFile(nodePrefabPath);
-
+            if (!poolName) return null;
+            let prefabNode = await ResourcesMgr.instance.loadFile(poolName);
+            node = instantiate(prefabNode);
             //判定是否可以放入节点池管理
-            let poolUnit = node.getComponent(PoolUnit);
+            let poolUnit = node?.getComponent(PoolUnit);
             if (!poolUnit) {
                 warn("%s", poolName, "此节点无法使用节点池创建");
                 return
@@ -50,10 +49,8 @@ export class NodePoolMgr extends BaseMgr<NodePoolMgr> {
             nodePool = new NodePool(poolName);
             nodePool.put(node);
             this._poolMap.set(poolName, nodePool);
-            return node;
-        } else {
-            return nodePool.get();
         }
+        return nodePool.get()
     }
 
     //回收节点池 
