@@ -79,7 +79,7 @@ export class ItemPrefab extends Component {
 
     //替换格子 空格子替换为normal
     replaceGrid(index) {
-
+        
     }
 
 

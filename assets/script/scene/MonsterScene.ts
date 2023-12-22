@@ -36,7 +36,7 @@ export class MonsterScene extends Component {
         collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
 
         //设置监听 
-        
+
     }
 
     start() {
@@ -83,9 +83,14 @@ export class MonsterScene extends Component {
         let otherNode = other.node;
         if (otherNode.name == "ItemPrefab") {
             otherNode.getComponent(ItemPrefab)?.recycleItem();
+            this.itemNodeMap.delete(otherNode.getComponent(ItemPrefab).increasingId);
         }
     }
 
+    //更新节点位置
+    updateItemNodePos() {
+
+    }
 
 
     update(dt: number) {
