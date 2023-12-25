@@ -2,16 +2,20 @@ import { _decorator, BoxCollider2D, Collider2D, Component, Contact2DType, Node }
 import { NodePoolMgr } from '../pool/NodePoolMgr';
 import { ItemPrefab, ItemType } from './ItemPrefab';
 import { ItemDataMgr } from './ItemDataMgr';
+import { ObserverMgr } from '../../components/event/ObserverMgr';
+import { GAMEMODULE } from '../Constants';
 const { ccclass, property } = _decorator;
 
 @ccclass('UpGridPrefab')
 export class UpGridPrefab extends Component {
 
-    posIndex: number;
+    posIndex: number = 0;
 
+    _isCollider: boolean = false;
     protected onLoad(): void {
         let collider = this.getComponent(Collider2D);
         collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        this._isCollider = false;
     }
 
     /**
@@ -26,41 +30,40 @@ export class UpGridPrefab extends Component {
      */
     onBeginContact(my: BoxCollider2D, other: BoxCollider2D) {
         let otherNode = other.node;
-        if (otherNode.name !== "ItemPrefab") {
+        if (otherNode.name !== "ItemPrefab" && otherNode.name !== "bottomCollider") {
             let itemNodeCom = otherNode.parent.getComponent(ItemPrefab);
             let value = ItemDataMgr.instance.getItemValuesById(itemNodeCom.increasingId);
             let unEmptyNum = value.filter(val => {
                 return val !== 0;
             });
-            if (otherNode.name == "EmptyPrefab") {
-                if (itemNodeCom.itemType == ItemType.Normal && unEmptyNum.length == 3) {
+            if (otherNode.name == "EmptyPrefab" && unEmptyNum.length == 3) {
+                this._isCollider = true;
+                if (itemNodeCom.itemType == ItemType.Normal) {
                     itemNodeCom.recycleItem();
-                }else {
-                        
+                    ObserverMgr.instance.emit(GAMEMODULE.MONSTER_UPDATE_STONE, itemNodeCom.increasingId);
+                } else if (itemNodeCom.itemType == ItemType.Stone) {
+                    if (itemNodeCom.eliminateNum == 1) {
+                        itemNodeCom.recycleItem();
+                    } else {
+                        itemNodeCom.eliminateNum = 1;
+                        ObserverMgr.instance.emit(GAMEMODULE.MONSTER_UPDATE_STONE, itemNodeCom.increasingId);
+                    }
+                }
+            } else if (otherNode.name == "NormalPrefab" || otherNode.name == "StorePrefab") {
+                //新增一行 或者在新增上替换
+                NodePoolMgr.instance.putNodeToPool(this.node);
+                if (this._isCollider) return
+                let preListId = ItemDataMgr.instance.getPreListNodeById(itemNodeCom.increasingId);
+                if (preListId) {
+                    ObserverMgr.instance.emit(GAMEMODULE.MONSTER_ADD_ITEM, { posIndex: this.posIndex, nextId: itemNodeCom.increasingId });
                 }
             }
-
-            switch (otherNode.name) {
-
-                case "EmptyPrefab":
-                    if (itemNodeCom)
-                        break
-            }
-
-
-            if (itemNodeCom.itemType)
-
-
-                for (let len = otherNode.children.length, i = len - 1; i >= 0; i--) {
-                    const element = otherNode.children[i];
-                    NodePoolMgr.instance.putNodeToPool(element);
-                }
         }
     }
 
     update(dt: number) {
         let pos = this.node.getPosition();
-        this.node.setPosition(pos.x, pos.y += dt * 35, pos.z);
+        this.node.setPosition(pos.x, pos.y += dt * 300, pos.z);
     }
 }
 

@@ -56,6 +56,17 @@ export class ItemDataMgr extends BaseMgr<ItemDataMgr>{
         if (!head) return [];
         return head.val;
     }
+    //获取当前格子的下一个格子信息
+    getPreListNodeById(id) {
+        let tail = this.itemListTail;
+        while (tail && tail.id !== id) {
+            tail = tail.pre;
+        }
+
+        if (!tail) return null;
+        return tail.id;
+    }
+
 
 }
 

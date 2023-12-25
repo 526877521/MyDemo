@@ -1,7 +1,7 @@
 import BaseMgr from "../../module/mgr/BaseMgr";
 
 export class ObserverMgr extends BaseMgr<ObserverMgr>  {
-    obsArray: {};
+    obsArray: {[key:string|number]:any}=Object.create(null);
 
     public static get instance(): ObserverMgr {
         return this._getInstance();
@@ -48,7 +48,7 @@ export class ObserverMgr extends BaseMgr<ObserverMgr>  {
     }
     // 移除该作用域的所有事件
     remove(ob) {
-        for (let k in this.obsArray) {// [msg:[{func:func, ob:ob}]]
+        for (let k in this.obsArray) {// [msg:[{func:func, ob:ob},{func:func, ob:ob}]]
             let msgCBArray = this.obsArray[k]; // [{func: func, ob: ob}]
             for (let i = 0; i < msgCBArray.length;) {
                 // {func: func, ob: ob}

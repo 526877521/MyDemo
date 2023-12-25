@@ -15,7 +15,7 @@ export class Observer extends Component {
             let msg = list[k];
             ObserverMgr.instance.on(msg, this._onMsg, this);
         }
-        //ObserverMgr.addEventListener(GameMsgGlobal.Net.MsgErr, this._onErrorDeal, this);
+
     }
     _getMsgList() {
         return [];
