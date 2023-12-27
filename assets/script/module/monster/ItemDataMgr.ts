@@ -64,7 +64,7 @@ export class ItemDataMgr extends BaseMgr<ItemDataMgr>{
         }
 
         if (!tail) return null;
-        return tail.id;
+        return tail.pre.id;
     }
 
 

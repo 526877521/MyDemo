@@ -90,7 +90,6 @@ export class MonsterScene extends Observer {
     //创建自定义行预制体
     async createCustomPre(posIndex, posY) {
         let itemNode = instantiate(this.prefab);
-        itemNode.name = "ItemPrefab_cus";
         itemNode.setPosition(0, posY);
         let values = await itemNode.getComponent(ItemPrefab)?.createCustomItem(posIndex, this._increasingId);
         this.content.addChild(itemNode);
@@ -113,28 +112,29 @@ export class MonsterScene extends Observer {
 
 
     addCusItem(data) {
-        let { posIndex, nextId } = data
-
+        let { posIndex, nextId } = data;
         let node = this.itemNodeMap.get(nextId);
         let height = node.getComponent(UITransform).height, posY = node.getPosition().y;
-        this.createCustomPre(posIndex, posY + height);
+        this.createCustomPre(posIndex, posY - height);
     }
 
 
     //更新节点位置
     updateItemNodePos(destroyId) {
-        let destroyNodePos = this.itemNodeMap.get(destroyId)?.getPosition();
+        let destroyNode = this.itemNodeMap.get(destroyId);
+        let destroyNodePos = destroyNode?.getPosition();
         this.itemNodeMap.delete(destroyId);
+        destroyNode.destroy();
         let preId = ItemDataMgr.instance.getPreListNodeById(destroyId);
         let preNode = this.itemNodeMap.get(preId);
+        ItemDataMgr.instance.deleteData(destroyId);
         while (preId && preNode && isValid(preNode)) {
             preNode.setPosition(destroyNodePos);
             preId = ItemDataMgr.instance.getPreListNodeById(preId);
             preNode = this.itemNodeMap.get(preId);
-            destroyNodePos = preNode.getPosition();
+            (preNode) && (destroyNodePos = preNode.getPosition());
         }
     }
-
 
     update(dt: number) {
         let pos = this.content.getPosition();

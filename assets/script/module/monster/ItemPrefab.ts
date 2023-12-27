@@ -64,26 +64,24 @@ export class ItemPrefab extends Observer {
     }
 
     //创建自定义item
-    async createCustomItem(index, id): Promise<number[]> {
+    async createCustomItem(index, id) {
         this.increasingId = id;
         this.itemType = ItemType.Normal;
-        return new Promise(async resolve => {
-            let i = 0;
-            let vales = [];
-            while (i < 4) {
-                if (i != index) {
-                    let emptyNode = await NodePoolMgr.instance.getPoolNode(POOL_ENMU.Monster_Empty);
-                    vales.push(0);
-                    this.node.addChild(emptyNode);
-                } else {
-                    let node = await NodePoolMgr.instance.getPoolNode(POOL_ENMU.Monster_Normal);
-                    vales.push(1);
-                    this.node.addChild(node);
-                }
-                i++;
+        let i = 0;
+        let vales = [];
+        while (i < 4) {
+            if (i != index) {
+                let emptyNode = await NodePoolMgr.instance.getPoolNode(POOL_ENMU.Monster_Empty);
+                vales.push(0);
+                this.node.addChild(emptyNode);
+            } else {
+                let node = await NodePoolMgr.instance.getPoolNode(POOL_ENMU.Monster_Normal);
+                vales.push(1);
+                this.node.addChild(node);
             }
-            resolve(vales);
-        })
+            i++;
+        }
+        return vales;
 
     }
     //替换类型
@@ -97,13 +95,11 @@ export class ItemPrefab extends Observer {
     }
 
     recycleItem() {
-        ItemDataMgr.instance.deleteData(this.increasingId);
         let child = this.node.children;
         for (let len = child.length, i = len - 1; i >= 0; i--) {
             const childNode = child[i];
             NodePoolMgr.instance.putNodeToPool(childNode);
         }
-        this.node.destroy();
         ObserverMgr.instance.emit(GAMEMODULE.MONSTER_UPDATE_ITEM_POS, this.increasingId);
     }
 
