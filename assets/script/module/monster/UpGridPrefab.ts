@@ -49,12 +49,15 @@ export class UpGridPrefab extends Component {
                         ObserverMgr.instance.emit(GAMEMODULE.MONSTER_UPDATE_STONE, itemNodeCom.increasingId);
                     }
                 }
+            } else if (otherNode.name == "EmptyPrefab" && unEmptyNum.length != 3) {
+                NodePoolMgr.instance.putNodeToPool(this.node);
+                
             } else if (otherNode.name == "NormalPrefab" || otherNode.name == "StorePrefab") {
                 //新增一行 或者在新增上替换
                 NodePoolMgr.instance.putNodeToPool(this.node);
                 if (this._isCollider) return
                 let preListId = ItemDataMgr.instance.getPreListNodeById(itemNodeCom.increasingId);
-                if (preListId) {
+                if (!preListId) {
                     ObserverMgr.instance.emit(GAMEMODULE.MONSTER_ADD_ITEM, { posIndex: this.posIndex, nextId: itemNodeCom.increasingId });
                 }
             }
