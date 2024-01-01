@@ -1,4 +1,4 @@
-import { macro } from "cc";
+import { macro, warn } from "cc";
 import BaseMgr from "../mgr/BaseMgr";
 import { ListNode } from "./ListNode";
 
@@ -56,6 +56,19 @@ export class ItemDataMgr extends BaseMgr<ItemDataMgr>{
         if (!head) return [];
         return head.val;
     }
+
+    //修改val值
+    updateItemValueById(id, index) {
+        let val: Array<number> = this.getItemValuesById(id);
+        if (val.length == 0) {
+            warn("%s", id, "对应的val为空,逻辑出现错误");
+            return
+        }
+        val.splice(index, 1, 1);
+        console.log(val);
+    }
+
+
     //获取当前格子的下一个格子信息
     getPreListNodeById(id) {
         let tail = this.itemListTail;
@@ -65,6 +78,19 @@ export class ItemDataMgr extends BaseMgr<ItemDataMgr>{
 
         if (!tail) return null;
         return tail.pre.id;
+    }
+
+
+    //获取当前格子的上一个格子信息
+    geNextListNodeById(id) {
+        let head = this.itemListHead;
+        while (head && head.id !== id) {
+            head = head.next;
+        }
+
+        if (!head) return null;
+        if (head.next.id == -1) return null;
+        return head.next;
     }
 
 

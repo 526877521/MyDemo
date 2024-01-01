@@ -1,4 +1,4 @@
-import { _decorator, Asset, Component, Prefab, Node, UITransform, instantiate, Collider2D, Contact2DType, BoxCollider, BoxCollider2D, EventTouch, isValid } from 'cc';
+import { _decorator, Asset, Component, Prefab, Node, UITransform, instantiate, Collider2D, Contact2DType, BoxCollider, BoxCollider2D, EventTouch, isValid, warn } from 'cc';
 import { NodePoolMgr } from '../module/pool/NodePoolMgr';
 import { po } from 'gettext-parser';
 import { ItemPrefab } from '../module/monster/ItemPrefab';
@@ -42,7 +42,8 @@ export class MonsterScene extends Observer {
     }
     _getMsgList() {
         return [GAMEMODULE.MONSTER_ADD_ITEM,
-        GAMEMODULE.MONSTER_UPDATE_ITEM_POS
+        GAMEMODULE.MONSTER_UPDATE_ITEM_POS,
+        GAMEMODULE.MONSTER_UPDATE_ITEM_CHILD,
         ];
     }
 
@@ -53,6 +54,9 @@ export class MonsterScene extends Observer {
                 break
             case GAMEMODULE.MONSTER_UPDATE_ITEM_POS:
                 this.updateItemNodePos(data);
+                break
+            case GAMEMODULE.MONSTER_UPDATE_ITEM_CHILD:
+                this.upadteItemChild(data);
                 break
         }
     }
@@ -68,11 +72,25 @@ export class MonsterScene extends Observer {
     async onBtnClickCreateGrid(event, idx) {
         let parent = event.target;
         let upNode = await NodePoolMgr.instance.getPoolNode(POOL_ENMU.Monster_UpGrid);
-        upNode.getComponent(UpGridPrefab).posIndex = Number(idx);
+        upNode.getComponent(UpGridPrefab).init(Number(idx));
         upNode.setPosition(0, 0, 0);
         parent.addChild(upNode);
     }
 
+    //修改格子的子节点
+    async upadteItemChild(data) {
+        let { id, posIndex } = data;
+        let itemNode = this.itemNodeMap.get(id);
+        if (!itemNode) {
+            warn("%s", id, "程序判定出现异常");
+            return
+        }
+        let updateNode = itemNode.children[posIndex];
+        NodePoolMgr.instance.putNodeToPool(updateNode);
+        let normalNode = await NodePoolMgr.instance.getPoolNode(POOL_ENMU.Monster_Normal);
+        itemNode.insertChild(normalNode, posIndex);
+
+    }
 
     //创建预制体
     async createPrafabToConent() {

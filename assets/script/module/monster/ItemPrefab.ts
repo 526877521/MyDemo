@@ -1,9 +1,6 @@
 import { _decorator, BoxCollider, Collider, Collider2D, Component, Contact2DType, instantiate, Label, Node, NodePool, Prefab } from 'cc';
 import { NodePoolMgr } from '../pool/NodePoolMgr';
 import { POOL_ENMU } from '../pool/PoolStruct';
-import { resolve } from 'path';
-import { Item } from '../../../TestScene/src/Item';
-import { ItemDataMgr } from './ItemDataMgr';
 import { Observer } from '../../components/event/Observer';
 import { GAMEMODULE } from '../Constants';
 import { ObserverMgr } from '../../components/event/ObserverMgr';

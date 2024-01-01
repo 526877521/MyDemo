@@ -4,6 +4,7 @@ import { ItemPrefab, ItemType } from './ItemPrefab';
 import { ItemDataMgr } from './ItemDataMgr';
 import { ObserverMgr } from '../../components/event/ObserverMgr';
 import { GAMEMODULE } from '../Constants';
+import { Global } from '../../Global';
 const { ccclass, property } = _decorator;
 
 @ccclass('UpGridPrefab')
@@ -15,6 +16,11 @@ export class UpGridPrefab extends Component {
     protected onLoad(): void {
         let collider = this.getComponent(Collider2D);
         collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        this._isCollider = false;
+    }
+
+    init(pos) {
+        this.posIndex = pos;
         this._isCollider = false;
     }
 
@@ -50,8 +56,27 @@ export class UpGridPrefab extends Component {
                     }
                 }
             } else if (otherNode.name == "EmptyPrefab" && unEmptyNum.length != 3) {
-                NodePoolMgr.instance.putNodeToPool(this.node);
-                
+                //如果上面一行 碰到障碍物 则在此行上修改，非 则不进行处理
+                let nextLstNode = Global.ItemData.geNextListNodeById(itemNodeCom.increasingId);
+                let flag: boolean = false;
+                if (!nextLstNode) {
+                    //说明碰到顶
+                    flag = true;
+                    NodePoolMgr.instance.putNodeToPool(this.node);
+
+                } else {
+                    let value = nextLstNode.val[this.posIndex];
+                    if (value !== 0) {
+                        NodePoolMgr.instance.putNodeToPool(this.node);
+                        flag = true;
+                    }
+
+                }
+                if (flag) {
+                    Global.ItemData.updateItemValueById(itemNodeCom.increasingId, this.posIndex);
+                    ObserverMgr.instance.emit(GAMEMODULE.MONSTER_UPDATE_ITEM_CHILD, { id: itemNodeCom.increasingId, posIndex: this.posIndex });
+                }
+
             } else if (otherNode.name == "NormalPrefab" || otherNode.name == "StorePrefab") {
                 //新增一行 或者在新增上替换
                 NodePoolMgr.instance.putNodeToPool(this.node);

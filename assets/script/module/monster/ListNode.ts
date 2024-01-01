@@ -12,7 +12,6 @@ export class ListNode {
         this.id = (id === undefined ? 0 : id);
         this.val = (val === undefined ? [] : val);
         this.next = (next === undefined ? null : next);
-        this.next = (next === undefined ? null : next);
         this.pre = (pre === undefined ? null : pre);
     }
     insertePre(node: ListNode) {
