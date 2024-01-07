@@ -36,8 +36,11 @@ export class UpGridPrefab extends Component {
      */
     onBeginContact(my: BoxCollider2D, other: BoxCollider2D) {
         let otherNode = other.node;
-        if (otherNode.name !== "ItemPrefab" && otherNode.name !== "bottomCollider") {
+        if (otherNode.name !== "ItemPrefab" && otherNode.name !== "bottomCollider" && otherNode.name !== "UpGridPrefab") {
             let itemNodeCom = otherNode.parent.getComponent(ItemPrefab);
+            if (!itemNodeCom?.increasingId) {
+                console.log("程序出现异常，请断点检查");
+            }
             let value = ItemDataMgr.instance.getItemValuesById(itemNodeCom.increasingId);
             let unEmptyNum = value.filter(val => {
                 return val !== 0;
@@ -46,6 +49,7 @@ export class UpGridPrefab extends Component {
                 this._isCollider = true;
                 if (itemNodeCom.itemType == ItemType.Normal) {
                     itemNodeCom.recycleItem();
+
                     ObserverMgr.instance.emit(GAMEMODULE.MONSTER_UPDATE_STONE, itemNodeCom.increasingId);
                 } else if (itemNodeCom.itemType == ItemType.Stone) {
                     if (itemNodeCom.eliminateNum == 1) {
@@ -89,9 +93,19 @@ export class UpGridPrefab extends Component {
         }
     }
 
+    _totoalTiem: number = 0;
     update(dt: number) {
+        this._totoalTiem += dt;
+        let speed = 400;
+        if (this._totoalTiem >= 30) {
+            speed = 500;
+        } else if (this._totoalTiem >= 90) {
+            speed = 600;
+        } else if (this._totoalTiem >= 200) {
+            speed = 700;
+        }
         let pos = this.node.getPosition();
-        this.node.setPosition(pos.x, pos.y += dt * 300, pos.z);
+        this.node.setPosition(pos.x, pos.y += dt * speed, pos.z);
     }
 }
 

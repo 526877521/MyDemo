@@ -105,6 +105,9 @@ export class ItemPrefab extends Observer {
         let child = this.node.children;
         child.forEach(v => {
             if (v.name !== "EmptyPrefab") {
+                if(!v){
+                    console.log("程序执行过程中异常，请断点检查");
+                }
                 v.getChildByName("lbl").getComponent(Label).string = `${1}`;
             }
         })

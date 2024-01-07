@@ -39,6 +39,7 @@ export class MonsterScene extends Observer {
         super.onLoad();
         let collider = this.bottomCollider.getComponent(Collider2D);
         collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        Global.MonserScene = this;
     }
     _getMsgList() {
         return [GAMEMODULE.MONSTER_ADD_ITEM,
@@ -65,7 +66,6 @@ export class MonsterScene extends Observer {
     start() {
         //优先创建两列
         this.createPrafabToConent();
-        this.schedule(this.createPrafabToConent, 1.5);
     }
 
     //点击创建上升的空格子
@@ -103,6 +103,18 @@ export class MonsterScene extends Observer {
         this.itemNodeMap.set(this._increasingId, itemNode);
         ItemDataMgr.instance.pushData(this._increasingId, values);
         this._increasingId++;
+
+        let time = 1.5;
+        if (this._totalTime >= 30) {
+            time = 1.2;
+        } else if (this._totalTime >= 90) {
+            time = 1;
+        } else if (this._totalTime >= 200) {
+            time = 0.5;
+        }
+        setTimeout(() => {
+            this.createPrafabToConent();
+        }, time)
     }
 
     //创建自定义行预制体
@@ -154,9 +166,19 @@ export class MonsterScene extends Observer {
         }
     }
 
+    _totalTime: number = 0;
     update(dt: number) {
+        this._totalTime += dt;
+        let speed = 30;
+        if (this._totalTime >= 30) {
+            speed = 40;
+        } else if (this._totalTime >= 90) {
+            speed = 50;
+        } else if (this._totalTime >= 200) {
+            speed = 60;
+        }
         let pos = this.content.getPosition();
-        this.content.setPosition(pos.x, pos.y -= dt * 30, pos.z);
+        this.content.setPosition(pos.x, pos.y -= dt * speed, pos.z);
     }
 }
 
